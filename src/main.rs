@@ -20,9 +20,17 @@ pub struct Player {
     height: f32,
 }
 
+pub struct Ball {
+    x: f32,
+    y: f32,
+    size: f32,
+    direction: [f32; 2],
+}
+
 pub struct App {
     gl: GlGraphics,
     player: Player,
+    ball: Ball,
     //enemy: Enemy,
     keys: HashSet<Key>,
     dt: f64,
@@ -42,7 +50,7 @@ impl App {
             clear(BLACK, gl);
 
             let transform = c.transform;
-
+            //draw border line
             for i in 0..(WINDOW_HEIGHT as i32 / REC_HEIGHT as i32) {
                 if i % 2 == 0 {
                     rectangle(
@@ -59,6 +67,20 @@ impl App {
                 }
             }
 
+            //draw ball
+            rectangle(
+                WHITE,
+                rectangle::rectangle_by_corners(
+                    self.ball.x.into(),
+                    self.ball.y.into(),
+                    (self.ball.x + self.ball.size).into(),
+                    (self.ball.y + self.ball.size).into(),
+                ),
+                transform,
+                gl,
+            );
+
+            //draw player
             rectangle(
                 WHITE,
                 rectangle::rectangle_by_corners(
@@ -116,6 +138,12 @@ fn main() {
             y: 0.0,
             width: 10.0,
             height: 100.0,
+        },
+        ball: Ball {
+            x: WINDOW_WIDTH / 2.0 - 15.0,
+            y: WINDOW_HEIGHT / 2.0 - 15.0,
+            size: 30.0,
+            direction: [-1.0, -1.0],
         },
         keys: HashSet::new(),
         dt: 0.0,
